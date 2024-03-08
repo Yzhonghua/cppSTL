@@ -11,6 +11,7 @@ class myqueue {
 
     ~myqueue() { delete[] __data; };
 
+    // feature: oject from same class can access each other
     myqueue(const myqueue &q) {
         __front = 0;
         __capacity = __back = q.__back - q.__front;
@@ -78,7 +79,7 @@ class myqueue {
     [[nodiscard]] bool empty() const noexcept { return __front == __back; };
 
     // for assignment and copy ctor
-    [[nodiscard]] const T &operator[](size_t i) const noexcept { return __data[i]; };
+    const T &operator[](size_t i) const noexcept { return __data[i]; };
 
     // for assignment and copy ctor
     T &operator[](size_t i) noexcept { return __data[i]; };
@@ -115,7 +116,7 @@ class myqueue {
 };
 
 template<typename T>
-void myqueue<T>::push(const T& value) {
+void myqueue<T>::push(const T &value) {
     if (__back == __capacity) {
         // resize
         __capacity = std::max(MINIMUM_CAPACITY, 2 * (__back - __front));
