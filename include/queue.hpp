@@ -9,10 +9,7 @@ class myqueue {
   public:
     myqueue() = default;
 
-    ~myqueue() {
-        delete[] __data;
-        __data = nullptr;
-    };
+    ~myqueue() { delete[] __data; };
 
     myqueue(const myqueue &q) {
         __front = 0;
