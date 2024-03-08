@@ -2,6 +2,7 @@
 #include <cstdlib>
 #include "queue.hpp"
 #include "vector.hpp"
+#include "string.hpp"
 
 using std::cout;
 using std::endl;
@@ -11,6 +12,8 @@ void Usage(char *progname);
 void test_queue();
 
 void test_vector();
+
+void test_string();
 
 int main(int argc, char **argv) {
     cout << "Hello World!" << endl;
@@ -22,6 +25,10 @@ int main(int argc, char **argv) {
         test_queue();
     } else if (std::string(argv[1]) == "vector") {
         test_vector();
+    } else if (std::string(argv[1]) == "string") {
+        test_string();
+    } else {
+        cout << "undefined behaviour." << endl;
     }
 
     return EXIT_SUCCESS;
@@ -58,4 +65,18 @@ void test_vector() {
 
     myvector<char> new_new_v(v);
     new_new_v.print();
+}
+
+void test_string() {
+    mystring a("aaa");
+    mystring b("bbb");
+    mystring c("ccc");
+    mystring test1(a);
+    test1.print();
+    mystring test2 = a + b;
+    test2.print();
+    mystring test3 = b;
+    test3.print();
+    test3 += c;
+    test3.print();
 }
