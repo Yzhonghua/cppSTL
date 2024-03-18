@@ -22,6 +22,13 @@ class mystring {
             // i.e. '\0'
             // but that's not guaranteed in C++ standard.
             // Therefore you cannot and should not rely on this behavior.
+
+            // optimize:
+            // if (s.__size != 0) {
+            //     strcpy(__data, s.__data);
+            // } else {
+            //     __data[0] = '\0';
+            // }
         }
     };
 
@@ -35,40 +42,56 @@ class mystring {
     };
 
     mystring(const char *s) {
-        if (s != nullptr) {
+        if (s != nullptr) { // notice: strcpy wants two non-null pointers
             __size = strlen(s);
             __capacity = std::max(__size + 1, MINIMUM_CAPACITY);
             __data = new char[__capacity];
             strcpy(__data, s);  // add '\0' at __data[__size] for us
-                                // that's way we need __size + 1 at least
+                                // that's why we need __size + 1 at least
         }
     };
 
     mystring &operator=(const mystring &s) {
         if (this != &s) {
             delete[] __data;
-            __data = nullptr;
 
             __size = s.__size;
             __capacity = s.__capacity;
             if (__size != 0) {
                 __data = new char[__capacity];
-                for (size_t i = 0; i < __size; ++i) { __data[i] = s.__data[i]; };
-                // manually set the null-terminator
-                __data[__size] = '\0';
+                strcpy(__data, s.__data);
+            } else {
+                __data = nullptr;
             }
         }
         return *this;
     };
 
+    // mystring &operator=(const mystring &s) {
+    //     if (this != &s) {
+    //         delete[] __data;
+    //         __data = nullptr;
+
+    //         __size = s.__size;
+    //         __capacity = s.__capacity;
+    //         if (__size != 0) {
+    //             __data = new char[__capacity];
+    //             for (size_t i = 0; i < __size; ++i) { __data[i] = s.__data[i]; };
+    //             // manually set the null-terminator
+    //             __data[__size] = '\0';
+    //         }
+    //     }
+    //     return *this;
+    // };
+
     mystring &operator=(mystring &&s) {
         if (this != &s) {
             delete[] __data;
-
-            __data = s.__data;
             __size = s.__size;
             __capacity = s.__capacity;
-            s.__data = nullptr;
+
+            __data = s.__data; // simply get the ownership
+            s.__data = nullptr; // any clear the old ones
             s.__size = 0;
             s.__capacity = 0;
         }
@@ -76,7 +99,7 @@ class mystring {
     };
 
     mystring &operator=(const char *s) {
-        delete __data;
+        delete[] __data;
         if (s != nullptr) {
             __size = strlen(s);
             __capacity = std::max(__size + 1, MINIMUM_CAPACITY);
