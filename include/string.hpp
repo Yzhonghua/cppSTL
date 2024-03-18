@@ -7,7 +7,7 @@ class mystring {
   public:
     mystring() = default;
 
-    ~mystring() { };
+    ~mystring() { delete[] __data; };
 
     mystring(const mystring &s) {
         __size = s.__size;
@@ -90,6 +90,7 @@ class mystring {
             __size = s.__size;
             __capacity = s.__capacity;
 
+            // we dont need to check if __size == 0
             __data = s.__data; // simply get the ownership
             s.__data = nullptr; // any clear the old ones
             s.__size = 0;

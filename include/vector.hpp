@@ -23,7 +23,8 @@ class myvector {
     myvector &operator=(const myvector &v) {
         if (this != &v) {
             delete[] __data;
-            __data == nullptr;
+            // set __data = nullptr immediately
+            __data = nullptr;
 
             __capacity = v.__capacity;
             __size = v.__size;
@@ -47,9 +48,12 @@ class myvector {
     myvector &operator=(myvector &&v) {
         if (this != &v) {
             delete[] __data;
-            __data = v.__data;
-            __size = v.__size;
+            // __data = nullptr; // dont need cause we will overwrite
             __capacity = v.__capacity;
+            __size = v.__size;
+
+            // we dont need to check if __size == 0
+            __data = v.__data;
             v.__data = nullptr;
             v.__size = 0;
             v.__capacity = 0;      
